@@ -1,42 +1,30 @@
 
 public class Game {
-	
-	private int aIndex = 0;
-	private int bIndex = 0;
-	
-	private String[] scores = {"L", "15", "30", "40"};
 
-	public String score() {
-		if(isDeuce())
-			return "Deuce";
-		
-		if (aWon())
-			return "A WINS";
+	private Scorer scorer = new StandardScorer();
 
-		if (bWon())
-			return "B WINS";
-		
-		return scores[aIndex] + "-" + scores[bIndex];
-	}
-
-	private boolean bWon() {
-		return bIndex == 4;
-	}
-
-	private boolean aWon() {
-		return aIndex == 4;
-	}
-
-	private boolean isDeuce() {
-		return aIndex == 3 && bIndex == 3;
+	public Game() {
+		scorer.addListener(new ScoringModeChanger(this));
 	}
 
 	public void playerAScores() {
-		aIndex++;
+		scorer.playerAScores();
 	}
 
 	public void playerBScores() {
-		bIndex++;
+		scorer.playerBScores();
 	}
 
+	public String score() {
+		return scorer.score();
+	}
+
+	public void playerAWon() {
+		scorer = new AWonScorer();
+		
+	}
+
+	public void playerBWon() {
+		scorer = new BWonScorer();
+	}
 }
