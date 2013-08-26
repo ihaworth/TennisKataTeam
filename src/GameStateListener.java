@@ -1,6 +1,7 @@
 
 public interface GameStateListener {
 
-	void aWon();
-	void bWon();
+    void aWon();
+    void bWon();
+    void deuce();
 }

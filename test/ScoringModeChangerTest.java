@@ -1,30 +1,44 @@
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import org.junit.Before;
 import org.junit.Test;
 
 
 public class ScoringModeChangerTest {
 
-	@Test
-	public void whenAWinsTheGameIsToldToChangeItsScoringModeToTheAWonImplementation() {
-		Game game = mock(Game.class);
-		ScoringModeChanger scoringModeChanger = new ScoringModeChanger(game);
-		
-		scoringModeChanger.aWon();
-		
-		verify(game).playerAWon();
-	}
+    private Game game;
+    private ScoringModeChanger scoringModeChanger;
 
-	
-	@Test
-	public void whenBWinsTheGameIsToldToChangeItsScoringModeToTheAWonImplementation() {
-		Game game = mock(Game.class);
-		ScoringModeChanger scoringModeChanger = new ScoringModeChanger(game);
-		
-		scoringModeChanger.bWon();
-		
-		verify(game).playerBWon();
-	}
+    @Before
+    public void setUp(){
+        game = mock(Game.class);
+        scoringModeChanger = new ScoringModeChanger(game);
+    }
+
+    @Test
+    public void whenAWinsTheGameIsToldToChangeItsScoringModeToTheAWonImplementation() {
+
+        scoringModeChanger.aWon();
+
+        verify(game).playerAWon();
+    }
+
+
+    @Test
+    public void whenBWinsTheGameIsToldToChangeItsScoringModeToTheAWonImplementation() {
+
+        scoringModeChanger.bWon();
+
+        verify(game).playerBWon();
+    }
+
+    @Test
+    public void whenDeuceThenNotifyGame(){
+
+        scoringModeChanger.deuce();
+
+        verify(game).deuce();
+    }
 
 }
