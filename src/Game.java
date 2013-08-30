@@ -29,5 +29,6 @@ public class Game {
 
     public void deuce() {
         scorer = new PostDeuceScorer();
+        scorer.addListener(new ScoringModeChanger(this));
     }
 }
