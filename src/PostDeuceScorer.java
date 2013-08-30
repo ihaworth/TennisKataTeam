@@ -1,121 +1,97 @@
 
 public class PostDeuceScorer implements Scorer
 {
-    private static final String ADVANTAGE_B = "Advantage B";
-    private static final String ADVANTAGE_A = "Advantage A";
-    private static final String DEUCE = "Deuce";
-
-
     public final State deuce = new State() {
 
         @Override
-        void aScores(PostDeuceScorer postDeuceScorer)
-        {
-            moveToAdvantageA(postDeuceScorer);
+        public void aScores() {
+            moveToAdvantageA();
         }
 
         @Override
-        void bScores(PostDeuceScorer postDeuceScorer)
-        {
-            moveToAdvantageB(postDeuceScorer);
+        public void bScores() {
+            moveToAdvantageB();
         }
 
         @Override
-        public String score()
-        {
-            return DEUCE;
+        public String score() {
+            return "Deuce";
         }
     };
 
     public final State advantageA = new State() {
 
         @Override
-        void aScores(PostDeuceScorer postDeuceScorer)
-        {
-            aWon(postDeuceScorer);
+        public void aScores() {
+            aWon();
         }
 
         @Override
-        void bScores(PostDeuceScorer postDeuceScorer)
-        {
-            moveToDeuce(postDeuceScorer);
+        public void bScores() {
+            moveToDeuce();
         }
 
         @Override
-        public String score()
-        {
-            return ADVANTAGE_A;
+        public String score() {
+            return "Advantage A";
         }
     };
 
     public final State advantageB = new State() {
 
         @Override
-        void aScores(PostDeuceScorer postDeuceScorer)
-        {
-            moveToDeuce(postDeuceScorer);
+        public void aScores() {
+            moveToDeuce();
         }
 
         @Override
-        void bScores(PostDeuceScorer postDeuceScorer)
-        {
-            bWon(postDeuceScorer);
+        public void bScores() {
+            bWon();
         }
 
         @Override
-        public String score()
-        {
-            return ADVANTAGE_B;
+        public String score() {
+            return "Advantage B";
         }
     };
 
-    abstract class State {
+    interface State {
 
+        void aScores();
+        void bScores();
 
-        State(){
-        }
+        String score();
+    }
 
-        public abstract String score();
+    protected void moveToDeuce()
+    {
+        state = deuce;
+    }
 
-        abstract void aScores(PostDeuceScorer postDeuceScorer);
+    protected void moveToAdvantageA()
+    {
+        state = advantageA;
+    }
 
-        abstract void bScores(PostDeuceScorer postDeuceScorer);
+    protected void moveToAdvantageB()
+    {
+        state = advantageB;
+    }
 
-        protected void moveToDeuce(PostDeuceScorer postDeuceScorer)
-        {
-            postDeuceScorer.state = deuce;
-        }
+    protected void aWon()
+    {
+        listener.aWon();
+    }
 
-        protected void moveToAdvantageA(PostDeuceScorer postDeuceScorer)
-        {
-            postDeuceScorer.state = advantageA;
-        }
-
-        protected void moveToAdvantageB(PostDeuceScorer postDeuceScorer)
-        {
-            postDeuceScorer.state = advantageB;
-        }
-
-        protected void aWon(PostDeuceScorer postDeuceScorer)
-        {
-            postDeuceScorer.listener.aWon();
-        }
-
-        protected void bWon(PostDeuceScorer postDeuceScorer)
-        {
-            postDeuceScorer.listener.bWon();
-        }
+    protected void bWon()
+    {
+        listener.bWon();
     }
 
 
     private State state = deuce;
 
     private GameStateListener listener;
-
-    // Conditionals
-    // Duplication
-    // String comparisons
-    // Too many responsibilities???
 
     @Override
     public String score()
@@ -126,13 +102,13 @@ public class PostDeuceScorer implements Scorer
     @Override
     public void playerAScores()
     {
-        state.aScores(this);
+        state.aScores();
     }
 
     @Override
     public void playerBScores()
     {
-        state.bScores(this);
+        state.bScores();
     }
 
     @Override
