@@ -95,13 +95,13 @@ public class PostDeuceScorer implements Scorer
     @Override
     public void playerAScores()
     {
-        advantageA.aScores(this);
+        state.aScores(this);
     }
 
     @Override
     public void playerBScores()
     {
-        advantageA.bScores(this);
+        state.bScores(this);
     }
 
     private boolean isAdvantageA()
