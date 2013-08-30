@@ -34,13 +34,24 @@ public class PostDeuceScorer implements Scorer
         {
             postDeuceScorer.state = deuce;
         }
-
-
     };
 
-    public final State advantageB = new State(ADVANTAGE_B);
+    public final State advantageB = new State(ADVANTAGE_B) {
 
-    class State {
+        @Override
+        void aScores(PostDeuceScorer postDeuceScorer)
+        {
+            postDeuceScorer.state = postDeuceScorer.deuce;
+        }
+
+        @Override
+        void bScores(PostDeuceScorer postDeuceScorer)
+        {
+            postDeuceScorer.listener.bWon();
+        }
+    };
+
+    abstract class State {
 
         private String score;
 
@@ -52,28 +63,9 @@ public class PostDeuceScorer implements Scorer
             return score;
         }
 
-        void aScores(PostDeuceScorer postDeuceScorer)
-        {
-            if(postDeuceScorer.isAdvantageB()) {
-                postDeuceScorer.state = postDeuceScorer.deuce;
-            } else if(postDeuceScorer.isAdvantageA()) {
-                postDeuceScorer.listener.aWon();
-            } else {
-                postDeuceScorer.state = this;
-            }
-        }
+        abstract void aScores(PostDeuceScorer postDeuceScorer);
 
-        void bScores(PostDeuceScorer postDeuceScorer)
-        {
-            if (postDeuceScorer.isAdvantageA()) {
-                postDeuceScorer.state = postDeuceScorer.deuce;
-            }
-            else if (postDeuceScorer.isAdvantageB()) {
-                postDeuceScorer.listener.bWon();
-            } else  {
-                postDeuceScorer.state = postDeuceScorer.advantageB;
-            }
-        }
+        abstract void bScores(PostDeuceScorer postDeuceScorer);
     }
 
 
