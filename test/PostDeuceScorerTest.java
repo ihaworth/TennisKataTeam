@@ -1,4 +1,7 @@
+
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,16 +11,19 @@ public class PostDeuceScorerTest
 {
 
     private PostDeuceScorer postDeuceScorer;
+    private GameStateListener listener;
 
     @Before
     public void setup() {
         postDeuceScorer = new PostDeuceScorer();
+        listener = mock(GameStateListener.class);
+        postDeuceScorer.addListener(listener);
     }
 
     @Test
     public void scoreIsInitiallyDeuce() {
 
-        assertEquals(postDeuceScorer.score(), "Deuce");
+        assertEquals("Deuce", postDeuceScorer.score());
     }
 
     @Test
@@ -44,7 +50,7 @@ public class PostDeuceScorerTest
 
         postDeuceScorer.playerAScores();
 
-        assertEquals(postDeuceScorer.score(), "Deuce");
+        assertEquals("Deuce", postDeuceScorer.score());
     }
 
     @Test
@@ -54,8 +60,26 @@ public class PostDeuceScorerTest
 
         postDeuceScorer.playerBScores();
 
-        assertEquals(postDeuceScorer.score(), "Deuce");
+        assertEquals("Deuce", postDeuceScorer.score());
     }
 
+    @Test
+    public void AScoring_TakesFromAdvantageAToAWon() {
 
+        postDeuceScorer.playerAScores();
+
+        postDeuceScorer.playerAScores();
+
+        verify(listener).aWon();
+    }
+
+    @Test
+    public void BScoring_TakesFromAdvantageBToBWon() {
+
+        postDeuceScorer.playerBScores();
+
+        postDeuceScorer.playerBScores();
+
+        verify(listener).bWon();
+    }
 }
