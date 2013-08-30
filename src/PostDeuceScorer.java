@@ -96,16 +96,6 @@ public class PostDeuceScorer implements Scorer
         state.bScores(this);
     }
 
-    private boolean isAdvantageA()
-    {
-        return state == advantageA;
-    }
-
-    private boolean isAdvantageB()
-    {
-        return state == advantageB;
-    }
-
     @Override
     public void addListener(GameStateListener listener)
     {
