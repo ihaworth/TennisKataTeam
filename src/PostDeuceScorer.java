@@ -6,66 +6,105 @@ public class PostDeuceScorer implements Scorer
     private static final String DEUCE = "Deuce";
 
 
-    public final State deuce = new State(PostDeuceScorer.DEUCE) {
+    public final State deuce = new State() {
 
         @Override
         void aScores(PostDeuceScorer postDeuceScorer)
         {
-            postDeuceScorer.state = advantageA;
+            moveToAdvantageA(postDeuceScorer);
         }
 
         @Override
         void bScores(PostDeuceScorer postDeuceScorer)
         {
-            postDeuceScorer.state = advantageB;
+            moveToAdvantageB(postDeuceScorer);
+        }
+
+        @Override
+        public String score()
+        {
+            return DEUCE;
         }
     };
 
-    public final State advantageA = new State(ADVANTAGE_A) {
+    public final State advantageA = new State() {
 
         @Override
         void aScores(PostDeuceScorer postDeuceScorer)
         {
-            postDeuceScorer.listener.aWon();
+            aWon(postDeuceScorer);
         }
 
         @Override
         void bScores(PostDeuceScorer postDeuceScorer)
         {
-            postDeuceScorer.state = deuce;
+            moveToDeuce(postDeuceScorer);
+        }
+
+        @Override
+        public String score()
+        {
+            return ADVANTAGE_A;
         }
     };
 
-    public final State advantageB = new State(ADVANTAGE_B) {
+    public final State advantageB = new State() {
 
         @Override
         void aScores(PostDeuceScorer postDeuceScorer)
         {
-            postDeuceScorer.state = postDeuceScorer.deuce;
+            moveToDeuce(postDeuceScorer);
         }
 
         @Override
         void bScores(PostDeuceScorer postDeuceScorer)
         {
-            postDeuceScorer.listener.bWon();
+            bWon(postDeuceScorer);
+        }
+
+        @Override
+        public String score()
+        {
+            return ADVANTAGE_B;
         }
     };
 
     abstract class State {
 
-        private String score;
 
-        State(String score){
-            this.score = score;
+        State(){
         }
 
-        public String score() {
-            return score;
-        }
+        public abstract String score();
 
         abstract void aScores(PostDeuceScorer postDeuceScorer);
 
         abstract void bScores(PostDeuceScorer postDeuceScorer);
+
+        protected void moveToDeuce(PostDeuceScorer postDeuceScorer)
+        {
+            postDeuceScorer.state = deuce;
+        }
+
+        protected void moveToAdvantageA(PostDeuceScorer postDeuceScorer)
+        {
+            postDeuceScorer.state = advantageA;
+        }
+
+        protected void moveToAdvantageB(PostDeuceScorer postDeuceScorer)
+        {
+            postDeuceScorer.state = advantageB;
+        }
+
+        protected void aWon(PostDeuceScorer postDeuceScorer)
+        {
+            postDeuceScorer.listener.aWon();
+        }
+
+        protected void bWon(PostDeuceScorer postDeuceScorer)
+        {
+            postDeuceScorer.listener.bWon();
+        }
     }
 
 
