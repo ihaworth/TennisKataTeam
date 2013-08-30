@@ -1,103 +1,61 @@
 
 public class PostDeuceScorer implements Scorer
 {
-    public final State deuce = new State() {
-
-        @Override
-        public void aScores() {
-            moveToAdvantageA();
-        }
-
-        @Override
-        public void bScores() {
-            moveToAdvantageB();
-        }
-
-        @Override
-        public String score() {
-            return "Deuce";
-        }
-    };
-
-    public final State advantageA = new State() {
-
-        @Override
-        public void aScores() {
-            aWon();
-        }
-
-        @Override
-        public void bScores() {
-            moveToDeuce();
-        }
-
-        @Override
-        public String score() {
-            return "Advantage A";
-        }
-    };
-
-    public final State advantageB = new State() {
-
-        @Override
-        public void aScores() {
-            moveToDeuce();
-        }
-
-        @Override
-        public void bScores() {
-            bWon();
-        }
-
-        @Override
-        public String score() {
-            return "Advantage B";
-        }
-    };
-
     interface State {
-
         void aScores();
         void bScores();
 
         String score();
     }
 
-    protected void moveToDeuce()
-    {
-        state = deuce;
-    }
+    public final State deuce = new State() {
 
-    protected void moveToAdvantageA()
-    {
-        state = advantageA;
-    }
+        @Override public void aScores() {
+            state = advantageA;
+        }
 
-    protected void moveToAdvantageB()
-    {
-        state = advantageB;
-    }
+        @Override public void bScores() {
+            state = advantageB;
+        }
 
-    protected void aWon()
-    {
-        listener.aWon();
-    }
+        @Override public String score() {
+            return "Deuce";
+        }
+    };
 
-    protected void bWon()
-    {
-        listener.bWon();
-    }
+    public final State advantageA = new State() {
 
+        @Override public void aScores() {
+            listener.aWon();
+        }
+
+        @Override public void bScores() {
+            state = deuce;
+        }
+
+        @Override public String score() {
+            return "Advantage A";
+        }
+    };
+
+    public final State advantageB = new State() {
+
+        @Override public void aScores() {
+            state = deuce;
+        }
+
+        @Override public void bScores() {
+            listener.bWon();
+        }
+
+        @Override public String score() {
+            return "Advantage B";
+        }
+    };
 
     private State state = deuce;
 
     private GameStateListener listener;
-
-    @Override
-    public String score()
-    {
-        return state.score();
-    }
 
     @Override
     public void playerAScores()
@@ -109,6 +67,12 @@ public class PostDeuceScorer implements Scorer
     public void playerBScores()
     {
         state.bScores();
+    }
+
+    @Override
+    public String score()
+    {
+        return state.score();
     }
 
     @Override
